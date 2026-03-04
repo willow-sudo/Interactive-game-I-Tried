@@ -1,0 +1,82 @@
+body{
+  margin:0;
+  background:black;
+  font-family: 'Arial', sans-serif;
+  color:#eee;
+  overflow:hidden;
+}
+
+/* BACKGROUND IMAGE */
+#background{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+  filter:brightness(0.35);
+  transition:1s ease;
+}
+
+/* DARK VIGNETTE */
+#darkOverlay{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle,
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.9) 80%);
+}
+
+/* CENTERED BOX */
+#centerBox{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:70%;
+  max-width:850px;
+  text-align:center;
+}
+
+/* TITLE */
+#title{
+  font-weight:300;
+  letter-spacing:3px;
+  margin-bottom:20px;
+  color:#bbb;
+}
+
+/* TEXT */
+#text{
+  font-size:22px;
+  line-height:1.8;
+  white-space:pre-line;
+  margin-bottom:30px;
+  opacity:0;
+  text-shadow: 0px 0px 10px #000;
+  animation:fadeText 1s forwards;
+}
+
+@keyframes fadeText{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* BUTTONS */
+#buttons button{
+  background:#111;
+  border:2px solid #333;
+  color:#eee;
+  padding:14px 24px;
+  margin:6px;
+  font-size:16px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.25s;
+  text-shadow: 0px 0px 5px #000;
+}
+
+#buttons button:hover{
+  background:#222;
+  transform:scale(1.05);
+}
