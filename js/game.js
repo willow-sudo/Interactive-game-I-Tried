@@ -7,7 +7,7 @@ const textDiv = document.getElementById("text");
 const buttonsDiv = document.getElementById("buttons");
 const backgroundDiv = document.getElementById("background");
 
-// ================= GITHUB / LINKS =================
+// ================= LINKS =================
 const linksDiv = document.createElement("div");
 linksDiv.style.position = "absolute";
 linksDiv.style.top = "10px";
