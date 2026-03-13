@@ -7,6 +7,17 @@ const textDiv = document.getElementById("text");
 const buttonsDiv = document.getElementById("buttons");
 const backgroundDiv = document.getElementById("background");
 
+// ================= GITHUB / LINKS =================
+const linksDiv = document.createElement("div");
+linksDiv.style.position = "absolute";
+linksDiv.style.top = "10px";
+linksDiv.style.right = "20px";
+linksDiv.style.color = "#eee";
+linksDiv.style.fontSize = "14px";
+linksDiv.style.textAlign = "right";
+linksDiv.style.maxWidth = "200px";
+document.body.appendChild(linksDiv);
+
 // ================= CREEPY MESSAGE BOX =================
 let creepTimer;
 let creepShown = false;
@@ -17,7 +28,7 @@ creepBox.style.top = "20%";
 creepBox.style.left = "50%";
 creepBox.style.transform = "translateX(-50%) scale(0.8)";
 creepBox.style.padding = "20px";
-creepBox.style.background = "#000000";
+creepBox.style.background = "#6e6e6e";
 creepBox.style.color = "#000";
 creepBox.style.borderRadius = "10px";
 creepBox.style.fontSize = "18px";
@@ -48,16 +59,12 @@ const creditsText = [
 ];
 
 const story = [
-  /* ---------- MENU ---------- */
+  // ---------- MENU ----------
   {
     id: "menu",
-    text: [
-      "I Tried",
-      "An interactive story",
-      "Press START to begin.",
-      "GitHub: https://github.com/yourusername",
-    ],
+    text: ["I Tried", "An interactive story", "Press START to begin."],
     interaction: { type: "menu" },
+    links: [{ text: "GitHub", url: "https://github.com/willow-sudo" }],
   },
   {
     id: "controls",
@@ -69,7 +76,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_1" },
   },
-  /* ---------- WALKING ---------- */
+  // ---------- WALKING ----------
   {
     id: "scene_1",
     text: [
@@ -156,7 +163,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_bridge_arrival" },
   },
-  /* ---------- BRIDGE ---------- */
+  // ---------- BRIDGE ----------
   {
     id: "scene_bridge_arrival",
     text: [
@@ -202,7 +209,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_phone_light" },
   },
-  /* ---------- PHONE ---------- */
+  // ---------- PHONE ----------
   {
     id: "scene_phone_light",
     text: [
@@ -236,7 +243,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_choice" },
   },
-  /* ---------- FINAL CHOICE ---------- */
+  // ---------- FINAL CHOICE ----------
   {
     id: "scene_choice",
     text: [
@@ -254,7 +261,7 @@ const story = [
       ],
     },
   },
-  /* ---------- ENDINGS ---------- */
+  // ---------- ENDINGS ----------
   {
     id: "ending_read",
     text: [
@@ -299,7 +306,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_credits" },
   },
-  /* ---------- CREDITS ---------- */
+  // ---------- CREDITS ----------
   {
     id: "scene_credits",
     text: creditsText,
@@ -313,6 +320,21 @@ function showScene(id) {
   buttonsDiv.innerHTML = "";
   document.onkeydown = null;
 
+  // hide/reset links
+  linksDiv.innerHTML = "";
+  if (scene.links) {
+    scene.links.forEach((link) => {
+      const a = document.createElement("a");
+      a.href = link.url;
+      a.textContent = link.text;
+      a.target = "_blank";
+      a.style.display = "block";
+      a.style.marginBottom = "5px";
+      a.style.color = "#0ff";
+      linksDiv.appendChild(a);
+    });
+  }
+
   // reset creepy box
   creepBox.style.opacity = "0";
   creepBox.style.transform = "translateX(-50%) scale(0.8)";
@@ -320,7 +342,6 @@ function showScene(id) {
   clearTimeout(creepTimer);
 
   backgroundDiv.style.background = "#ffffff";
-
   textDiv.style.opacity = 0;
   textDiv.style.whiteSpace = "pre-wrap";
   textDiv.style.lineHeight = "1.4";
@@ -330,7 +351,6 @@ function showScene(id) {
   const interaction = scene.interaction;
   if (!interaction) return;
 
-  // ===== MENU =====
   if (interaction.type === "menu") {
     const btn = document.createElement("button");
     btn.textContent = "Start";
@@ -339,20 +359,15 @@ function showScene(id) {
       bgMusic?.play().catch(() => {});
     };
     buttonsDiv.appendChild(btn);
-  }
-  // ===== CONTINUE =====
-  else if (interaction.type === "continue") {
+  } else if (interaction.type === "continue") {
     document.onkeydown = (e) => {
-      if (e.code === "Enter" || e.code === "Space") {
-        showScene(interaction.next);
-      }
+      if (e.code === "Enter" || e.code === "Space") showScene(interaction.next);
     };
-
-    
+    // show creepy tip once after 10 seconds
     creepTimer = setTimeout(() => {
       if (!creepShown) {
         creepBox.textContent =
-          "press Enter or Space";
+          "what if you never get to the next scene... (press Enter or Space)";
         creepBox.style.opacity = "1";
         creepBox.style.transform = "translateX(-50%) scale(1)";
         textDiv.style.transition = "transform 10s ease";
@@ -362,18 +377,14 @@ function showScene(id) {
         creepShown = true;
       }
     }, 10000);
-  }
-  // ===== CHOICES =====
-  else if (interaction.type === "choices") {
+  } else if (interaction.type === "choices") {
     interaction.buttons.forEach((b) => {
       const btn = document.createElement("button");
       btn.textContent = b.text;
       btn.onclick = () => showScene(b.next);
       buttonsDiv.appendChild(btn);
     });
-  }
-  // ===== CREDITS =====
-  else if (interaction.type === "credits") {
+  } else if (interaction.type === "credits") {
     const btn = document.createElement("button");
     btn.textContent = "Return to Menu";
     btn.onclick = () => showScene("menu");
