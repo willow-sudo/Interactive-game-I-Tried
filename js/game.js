@@ -1,24 +1,71 @@
 // ================= MUSIC =================
 const bgMusic = document.getElementById("bgMusic");
-if (bgMusic) {
-  bgMusic.volume = 0.25;
-}
+if (bgMusic) bgMusic.volume = 0.25;
 
 // ================= ELEMENTS =================
 const textDiv = document.getElementById("text");
 const buttonsDiv = document.getElementById("buttons");
 const backgroundDiv = document.getElementById("background");
 
-// ================= STORY =================
-const story = [
-  /* ---------- MENU ---------- */
+// ================= GITHUB / LINKS =================
+const linksDiv = document.createElement("div");
+linksDiv.style.position = "absolute";
+linksDiv.style.top = "10px";
+linksDiv.style.right = "20px";
+linksDiv.style.color = "#eee";
+linksDiv.style.fontSize = "14px";
+linksDiv.style.textAlign = "right";
+linksDiv.style.maxWidth = "200px";
+document.body.appendChild(linksDiv);
 
+// ================= CREEPY MESSAGE BOX =================
+let creepTimer;
+let creepShown = false;
+
+const creepBox = document.createElement("div");
+creepBox.style.position = "absolute";
+creepBox.style.top = "20%";
+creepBox.style.left = "50%";
+creepBox.style.transform = "translateX(-50%) scale(0.8)";
+creepBox.style.padding = "20px";
+creepBox.style.background = "#6e6e6e";
+creepBox.style.color = "#000";
+creepBox.style.borderRadius = "10px";
+creepBox.style.fontSize = "18px";
+creepBox.style.textAlign = "center";
+creepBox.style.opacity = "0";
+creepBox.style.transition = "transform 2s ease, opacity 2s ease";
+creepBox.style.maxWidth = "80%";
+creepBox.style.zIndex = "10";
+document.body.appendChild(creepBox);
+
+// ================= STORY =================
+const creditsText = [
+  "The End",
+  "",
+  "Story",
+  "Benyamin, Nullchan404",
+  "",
+  "Programming",
+  "Benyamin, Nullchan404",
+  "",
+  "Design",
+  "Benyamin, Nullchan404",
+  "",
+  "Special Thanks",
+  "Everyone who shared their stories and experiences, and everyone who struggles in silence. You are not alone.",
+  "",
+  "Thank you for playing.",
+];
+
+const story = [
+  // ---------- MENU ----------
   {
     id: "menu",
     text: ["I Tried", "An interactive story", "Press START to begin."],
     interaction: { type: "menu" },
+    links: [{ text: "GitHub", url: "https://github.com/willow-sudo" }],
   },
-
   {
     id: "controls",
     text: [
@@ -29,9 +76,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_1" },
   },
-
-  /* ---------- WALKING ---------- */
-
+  // ---------- WALKING ----------
   {
     id: "scene_1",
     text: [
@@ -42,7 +87,6 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_memory" },
   },
-
   {
     id: "scene_memory",
     text: [
@@ -60,7 +104,6 @@ const story = [
       ],
     },
   },
-
   {
     id: "scene_side_street",
     text: [
@@ -77,7 +120,6 @@ const story = [
       ],
     },
   },
-
   {
     id: "scene_stop",
     text: [
@@ -88,7 +130,6 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_stop_thoughts" },
   },
-
   {
     id: "scene_stop_thoughts",
     text: [
@@ -104,7 +145,6 @@ const story = [
       ],
     },
   },
-
   {
     id: "scene_lingering",
     text: [
@@ -114,7 +154,6 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_walk_more" },
   },
-
   {
     id: "scene_walk_more",
     text: [
@@ -124,9 +163,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_bridge_arrival" },
   },
-
-  /* ---------- BRIDGE ---------- */
-
+  // ---------- BRIDGE ----------
   {
     id: "scene_bridge_arrival",
     text: [
@@ -136,7 +173,6 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_bridge_middle" },
   },
-
   {
     id: "scene_bridge_middle",
     text: [
@@ -153,7 +189,6 @@ const story = [
       ],
     },
   },
-
   {
     id: "scene_memory_flash",
     text: [
@@ -164,7 +199,6 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_phone_light" },
   },
-
   {
     id: "scene_look_water",
     text: [
@@ -175,9 +209,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_phone_light" },
   },
-
-  /* ---------- PHONE ---------- */
-
+  // ---------- PHONE ----------
   {
     id: "scene_phone_light",
     text: [
@@ -187,7 +219,6 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_phone_hesitation" },
   },
-
   {
     id: "scene_phone_hesitation",
     text: [
@@ -203,7 +234,6 @@ const story = [
       ],
     },
   },
-
   {
     id: "scene_choice_intro",
     text: [
@@ -213,9 +243,7 @@ const story = [
     ],
     interaction: { type: "continue", next: "scene_choice" },
   },
-
-  /* ---------- FINAL CHOICE ---------- */
-
+  // ---------- FINAL CHOICE ----------
   {
     id: "scene_choice",
     text: [
@@ -233,9 +261,7 @@ const story = [
       ],
     },
   },
-
-  /* ---------- ENDINGS ---------- */
-
+  // ---------- ENDINGS ----------
   {
     id: "ending_read",
     text: [
@@ -245,9 +271,8 @@ const story = [
       "\"I'm not okay… but I'm still here.\"",
       "The night loosens slightly.",
     ],
-    interaction: { type: "end" },
+    interaction: { type: "continue", next: "scene_credits" },
   },
-
   {
     id: "ending_ignore",
     text: [
@@ -256,9 +281,8 @@ const story = [
       "The world feels distant.",
       "Surviving tonight is enough.",
     ],
-    interaction: { type: "end" },
+    interaction: { type: "continue", next: "scene_credits" },
   },
-
   {
     id: "ending_walk_away",
     text: [
@@ -267,9 +291,8 @@ const story = [
       "Morning will come eventually.",
       "She keeps moving.",
     ],
-    interaction: { type: "end" },
+    interaction: { type: "continue", next: "scene_credits" },
   },
-
   {
     id: "ending_jump",
     text: [
@@ -281,32 +304,53 @@ const story = [
       "The river keeps flowing.",
       "The night forgets.",
     ],
-    interaction: { type: "end" },
+    interaction: { type: "continue", next: "scene_credits" },
+  },
+  // ---------- CREDITS ----------
+  {
+    id: "scene_credits",
+    text: creditsText,
+    interaction: { type: "credits" },
   },
 ];
 
 // ================= ENGINE =================
-
 function showScene(id) {
   const scene = story.find((s) => s.id === id);
   buttonsDiv.innerHTML = "";
   document.onkeydown = null;
 
-  // dark background colors only
-  backgroundDiv.style.background =
-    scene.id === "ending_jump" ? "#000000" : "#0a0a0a";
+  // hide/reset links
+  linksDiv.innerHTML = "";
+  if (scene.links) {
+    scene.links.forEach((link) => {
+      const a = document.createElement("a");
+      a.href = link.url;
+      a.textContent = link.text;
+      a.target = "_blank";
+      a.style.display = "block";
+      a.style.marginBottom = "5px";
+      a.style.color = "#0ff";
+      linksDiv.appendChild(a);
+    });
+  }
 
+  // reset creepy box
+  creepBox.style.opacity = "0";
+  creepBox.style.transform = "translateX(-50%) scale(0.8)";
+  creepShown = false;
+  clearTimeout(creepTimer);
+
+  backgroundDiv.style.background = "#ffffff";
   textDiv.style.opacity = 0;
   textDiv.style.whiteSpace = "pre-wrap";
   textDiv.style.lineHeight = "1.4";
   textDiv.textContent = scene.text.join("\n");
-
   setTimeout(() => (textDiv.style.opacity = 1), 60);
 
   const interaction = scene.interaction;
   if (!interaction) return;
 
-  // MENU
   if (interaction.type === "menu") {
     const btn = document.createElement("button");
     btn.textContent = "Start";
@@ -315,29 +359,32 @@ function showScene(id) {
       bgMusic?.play().catch(() => {});
     };
     buttonsDiv.appendChild(btn);
-  }
-
-  // CONTINUE
-  else if (interaction.type === "continue") {
+  } else if (interaction.type === "continue") {
     document.onkeydown = (e) => {
-      if (e.code === "Enter" || e.code === "Space") {
-        showScene(interaction.next);
-      }
+      if (e.code === "Enter" || e.code === "Space") showScene(interaction.next);
     };
-  }
-
-  // CHOICES
-  else if (interaction.type === "choices") {
+    // show creepy tip once after 10 seconds
+    creepTimer = setTimeout(() => {
+      if (!creepShown) {
+        creepBox.textContent =
+          "what if you never get to the next scene... (press Enter or Space)";
+        creepBox.style.opacity = "1";
+        creepBox.style.transform = "translateX(-50%) scale(1)";
+        textDiv.style.transition = "transform 10s ease";
+        textDiv.style.transform = "scale(0.95)";
+        backgroundDiv.style.transition = "transform 10s ease";
+        backgroundDiv.style.transform = "scale(0.95)";
+        creepShown = true;
+      }
+    }, 10000);
+  } else if (interaction.type === "choices") {
     interaction.buttons.forEach((b) => {
       const btn = document.createElement("button");
       btn.textContent = b.text;
       btn.onclick = () => showScene(b.next);
       buttonsDiv.appendChild(btn);
     });
-  }
-
-  // END
-  else if (interaction.type === "end") {
+  } else if (interaction.type === "credits") {
     const btn = document.createElement("button");
     btn.textContent = "Return to Menu";
     btn.onclick = () => showScene("menu");
@@ -345,5 +392,5 @@ function showScene(id) {
   }
 }
 
-// START
+// ===== START GAME =====
 showScene("menu");
