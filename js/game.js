@@ -64,7 +64,7 @@ const story = [
     id: "menu",
     text: ["I Tried", "An interactive story", "Press START to begin."],
     interaction: { type: "menu" },
-    links: [{ text: "GitHub", url: "https://github.com/willow-sudo" }],
+    links: [{ text: "LinkTree", url: "https://linktr.ee/Nullchan404" }],
   },
   {
     id: "controls",
